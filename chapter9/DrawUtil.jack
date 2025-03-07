@@ -1,0 +1,61 @@
+class DrawUtil {
+    function void drawGrid(int offsetX, int offsetY, int width, int height, int size) {
+        var int count;
+        let count = 0;
+        
+        while (count < (height+1)) {
+            do Screen.drawLine(offsetX, offsetY + (size * count), offsetX + (size * width), offsetY + (size * count));
+            let count = count + 1;
+        }
+
+        let count = 0;
+
+        while (count < (width+1)) {
+            do Screen.drawLine(offsetX + (size * count), offsetY, offsetX + (size * count), offsetY + (size * height));
+            let count = count + 1;
+        }
+
+        return; 
+    }
+
+    function void drawCircle(int offsetX, int offsetY, int radius) {
+        var int centerX, centerY;
+
+        let centerX = offsetX + 15;
+        let centerY = offsetY + 15;
+
+        do Screen.drawCircle(centerX, centerY, radius);
+        return;
+    }
+
+    function void drawX(int offsetX, int offsetY, int size) {
+        do Screen.drawLine(offsetX, offsetY, offsetX + size, offsetY + size);
+        do Screen.drawLine(offsetX, offsetY + size, offsetX + size, offsetY);
+        return;
+    }
+
+    function void printScore(int playerOneScore, int playerTwoScore) {
+        do Output.moveCursor(5,38);
+        do Output.printString("Score:");
+        
+        do Output.moveCursor(7,38);
+        do Output.printString("Player 1: ");
+        do Output.printInt(playerOneScore);
+
+        do Output.moveCursor(9,38);
+        do Output.printString("Player 2: ");
+        do Output.printInt(playerTwoScore);
+
+        return;
+    }
+
+    function void printMessage(String line1, String line2) {
+        do Output.moveCursor(12,38);
+        do Output.printString(line1);
+
+        do Output.moveCursor(14,38);
+        do Output.printString(line2);
+
+        return;
+    }
+}

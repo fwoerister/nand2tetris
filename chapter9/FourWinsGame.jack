@@ -1,0 +1,271 @@
+class FourWinsGame {
+    field ColumnPicker columnPicker;
+    field Array columns, validKeys;
+    field int validKeysLen, winner;
+
+    constructor FourWinsGame new() {
+        var int idx;
+        let idx = 0;
+
+        let columnPicker = ColumnPicker.new();
+        let columns = Array.new(7);
+
+        let winner = -1;
+
+        let validKeysLen = 3;
+        let validKeys = Array.new(validKeysLen);
+        let validKeys[0] = String.newLine();        // newline
+        let validKeys[1] = 130;                     // left arrow
+        let validKeys[2] = 132;                     // right arrow
+
+        while (idx < 7) {
+            let columns[idx] = TokenColumn.new();
+            let idx = idx + 1;
+        }
+
+        return this;
+    }
+
+    method int startGame() {
+        var char userInput;
+        var TokenColumn currentCol;
+        var int nextPlayer;
+
+        do renderGame();
+
+        while (~isGameOver()) {
+            let userInput = IOUtil.readNextValidInput(validKeys, validKeysLen);
+            if (userInput = 130) {
+                do columnPicker.moveLeft();
+            }
+
+            if (userInput = 132) {
+                do columnPicker.moveRight();
+            }
+
+            if (userInput = String.newLine()) {
+                let currentCol = columns[columnPicker.getColumn()];
+
+                if (~currentCol.isFull()) {
+                    if (columnPicker.getPlayer() = 0) {    
+                        do currentCol.submitToken(0);
+                        let nextPlayer = 1;
+                    } else {
+                        do currentCol.submitToken(1);
+                        let nextPlayer = 0;
+                    }
+
+                    do columnPicker.setPlayer(nextPlayer);
+                }   
+            }
+
+            let winner = findWinner();
+
+            do renderGame();
+        }
+
+        return winner;
+    }
+
+    method int getPlayerAt(int column, int row) {
+        var TokenColumn col;
+        let col = columns[column];
+        return col.getPlayerAt(row);
+    }
+
+    method int findWinner() {
+        var int winner;
+        let winner = checkHorizontalWins();
+
+        if (~(winner = -1)) {
+            return winner;
+        }
+
+        let winner = checkVerticalWins();
+
+        if (~(winner = -1)) {
+            return winner;
+        }
+
+        let winner = checkDiagonalWins();
+
+        if (~(winner = -1)) {
+            return winner;
+        }
+
+        let winner = checkCounterDiagonalWins();
+
+        if (~(winner = -1)) {
+            return winner;
+        }
+
+        return winner;
+    }
+
+    method int checkVerticalWins() {
+        var int player;
+        var int col, row, count;
+        let col = 0;
+
+        while (col < 7) {
+            let row = 1;
+            let count = 0;
+
+            while (row < 6) {
+                if ((getPlayerAt(col, row) = getPlayerAt(col, (row - 1)))) {
+                    if (~(getPlayerAt(col, row) = -1)) {
+                        let count = count + 1;
+                    } else {
+                        let count = 0;    
+                    }
+                } else {
+                    let count = 0;
+                }
+
+                if (count = 3) {
+                    return getPlayerAt(col, row);
+                }
+
+                let row = row + 1;
+            }
+
+            let col = col + 1;
+        }
+
+        return -1;
+    }
+
+    method int checkHorizontalWins() {
+        var int player, col, row, count;
+
+        let row = 0;
+        
+        while (row < 6) {
+            let col = 1; 
+            let count = 0;
+            
+            while (col < 7) {
+                if ((getPlayerAt(col, row) = getPlayerAt((col - 1), row))) {
+                    if (~(getPlayerAt(col, row) = -1)) {
+                        let count = count + 1;
+                    } else {
+                        let count = 0;    
+                    }
+                } else {
+                    let count = 0;
+                }
+
+                if (count = 3) {
+                    return getPlayerAt(col, row);
+                }
+                let col = col + 1;
+            }
+
+            let row = row + 1;
+        }
+
+        return -1;
+    }
+
+    method int checkDiagonalWins() {
+        var int col, row;
+        var int f1, f2, f3, f4;
+
+        let col = 0;
+
+        while (col < 4) {
+            
+            let row = 0;
+            
+            while (row < 3) {
+                
+                let f1 = getPlayerAt(col, row);
+                let f2 = getPlayerAt(col+1, row+1);
+                let f3 = getPlayerAt(col+2, row+2);
+                let f4 = getPlayerAt(col+3, row+3);
+
+                if ((f1 = f2) & (f2 = f3) & (f3 = f4)) {
+                    return f1;
+                }
+
+                let row = row + 1;
+            }
+
+            let col = col + 1;
+        }
+
+        return -1;
+    }
+
+    method int checkCounterDiagonalWins() {
+        var int col, row;
+        var int f1, f2, f3, f4;
+
+        let col = 3;
+        
+        while (col < 7) {
+            
+            let row = 0;
+
+            while (row < 3) {
+                let f1 = getPlayerAt(col, row);
+                let f2 = getPlayerAt(col-1, row+1);
+                let f3 = getPlayerAt(col-2, row+2);
+                let f4 = getPlayerAt(col-3, row+3);
+
+                if ((f1 = f2) & (f2 = f3) & (f3 = f4)) {
+                    return f1;
+                }
+
+                let row = row + 1;
+            }
+
+            let col = col + 1;
+        }
+
+        return -1;
+    }
+
+    method void renderGame() {
+        var int columnIdx;
+        var TokenColumn col;
+
+        let columnIdx = 0;
+
+        do Screen.setColor(false);
+        do Screen.drawRectangle(0,0, 300, 256);
+        do Screen.setColor(true);
+
+        do columnPicker.draw(32, 0);
+        do DrawUtil.drawGrid(32,32,7,6,32);
+
+        while (columnIdx < 7) {
+            let col = columns[columnIdx];
+            do col.draw(32 + (columnIdx * 32), 32);
+            let columnIdx = columnIdx + 1;
+        }
+
+        return;
+    }
+
+    method boolean isGameOver() {
+        var int colIdx;
+        var TokenColumn col;
+        
+        let colIdx = 0;
+
+        if (winner = -1) {
+            while (colIdx < 7) {
+                let col = columns[colIdx];
+
+                if (~col.isFull()) {
+                    return false;
+                }
+
+                let colIdx = colIdx + 1;
+            }
+        }
+
+        return true;
+    }
+}

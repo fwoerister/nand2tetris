@@ -1,0 +1,54 @@
+class TokenColumn {
+    field Array column;
+    field int nextToken;
+
+    constructor TokenColumn new() {
+        var int idx;
+
+        let nextToken = 0;
+
+        let column = Array.new(6);
+        
+        let idx = 0;
+
+        while (idx < 6) {
+            let column[idx] = -1;
+            let idx = idx + 1;
+        }
+
+        return this;
+    }
+
+    method void submitToken(int token) {
+        let column[nextToken] = token;
+        let nextToken = nextToken + 1;
+        return;
+    }
+
+    method boolean isFull() {
+        return (nextToken = 6);
+    }
+
+    method int getPlayerAt(int pos) {
+        return column[pos];
+    }
+
+    method void draw(int offsetX, int offsetY) {
+        var int count;
+        let count = 0;
+
+        while (count < 6) {
+            if (column[count] = 0){
+                do DrawUtil.drawCircle(offsetX + 1, offsetY + ((5 - count) * 32) + 1, 13);
+            }
+
+            if (column[count] = 1) {
+                do DrawUtil.drawX(offsetX + 5, offsetY + ((5 - count) *32) + 5, 22);
+            }
+                
+            let count = count + 1;
+        }
+
+        return;
+    }
+}

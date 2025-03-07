@@ -1,0 +1,40 @@
+class Main {
+    function void main() {
+        var int scorePlayer1, scorePlayer2, winner;
+        var FourWinsGame game;
+        var Array validContinueKeys;
+
+        let scorePlayer1 = 0;
+        let scorePlayer2 = 0;
+
+        let validContinueKeys = Array.new(1);
+        let validContinueKeys[0] = 114;
+
+        while (true) {
+            do Screen.clearScreen();
+            do DrawUtil.printScore(scorePlayer1, scorePlayer2);
+            
+            let game = FourWinsGame.new();
+            let winner = game.startGame();
+
+            if (winner = 0) {
+                do DrawUtil.printMessage("Player 1 won!", "Press R to play again!");
+                let scorePlayer1 = scorePlayer1 + 1;
+            }
+
+            if (winner = 1) {
+                let scorePlayer2 = scorePlayer2 + 1;
+                do DrawUtil.printMessage("Player 2 won!", "Press R to play again!");
+            }
+
+            if (winner = -1) {
+                do DrawUtil.printMessage("Tie!", "Press R to play again!");
+            }
+
+            do IOUtil.readNextValidInput(validContinueKeys, 1);
+        }
+        
+
+        return;
+    }
+}

@@ -1,0 +1,37 @@
+class IOUtil {
+    function boolean isValidKey(Array validKeys, int validKeysLen, int pressedKey) {
+        var int newLine, leftArrow, rightArrow, idx;
+        let newLine = String.newLine(); // newline
+        let leftArrow = 130; // left arrow
+        let rightArrow = 132; // right arrow
+        
+        let idx = 0;
+
+        while (idx < validKeysLen) {
+            if (pressedKey = validKeys[idx]){
+                return true;
+            }
+            let idx = idx + 1;
+        }
+
+        return false;
+    }
+
+    function char readNextValidInput(Array validKeys, int validKeysLen) {
+        var int currentKey, nextValidInput;
+
+        let currentKey = Keyboard.keyPressed();
+
+        while (~IOUtil.isValidKey(validKeys, validKeysLen, currentKey)) {
+            let currentKey = Keyboard.keyPressed();
+        }
+
+        let nextValidInput = currentKey;
+
+        while (~(currentKey = 0)) {
+            let currentKey = Keyboard.keyPressed();
+        }
+
+        return nextValidInput;
+    }
+}

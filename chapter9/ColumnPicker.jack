@@ -1,0 +1,56 @@
+class ColumnPicker {
+    field int column, player;
+    
+
+    constructor ColumnPicker new() {
+        let column = 2;
+        let player = 0;
+        return this;
+    }
+
+    method void setPlayer(int newPlayerVal) {
+        let player = newPlayerVal;
+        return;
+    }
+
+    method void moveLeft() {
+        if (column > 0) {
+            let column = column - 1;
+        }
+
+        return;
+    }
+
+    method void moveRight() {
+        if (column < 6) {
+            let column = column + 1;
+        }
+        return;
+    }
+
+    method int getColumn() {
+        return column;
+    }
+
+    method int getPlayer() {
+        return player;
+    }
+
+    method void draw(int offsetX, int offsetY) {        
+        var int newOffsetX, newOffsetY;
+        
+        if (player = 0) {
+            let newOffsetX = offsetX + (column * 32) + 1;
+            let newOffsetY = newOffsetY + 1;
+        
+            do DrawUtil.drawCircle(newOffsetX, offsetY, 13);
+        } else {
+            let newOffsetX = offsetX + (column * 32) + 5;
+            let newOffsetY = offsetY + 5;
+        
+            do DrawUtil.drawX(newOffsetX, newOffsetY, 22);
+        }
+
+        return;
+    }
+}
