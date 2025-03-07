@@ -1,0 +1,67 @@
+function IOUtil.isValidKey 4
+call String.newLine 0
+pop local 0
+push constant 130
+pop local 1
+push constant 132
+pop local 2
+push constant 0
+pop local 3
+label WHILE_EXP0
+push local 3
+push argument 1
+lt
+not
+if-goto WHILE_END0
+push argument 2
+push local 3
+push argument 0
+add
+pop pointer 1
+push that 0
+eq
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push constant 0
+not
+return
+label IF_FALSE0
+push local 3
+push constant 1
+add
+pop local 3
+goto WHILE_EXP0
+label WHILE_END0
+push constant 0
+return
+function IOUtil.readNextValidInput 2
+call Keyboard.keyPressed 0
+pop local 0
+label WHILE_EXP0
+push argument 0
+push argument 1
+push local 0
+call IOUtil.isValidKey 3
+not
+not
+if-goto WHILE_END0
+call Keyboard.keyPressed 0
+pop local 0
+goto WHILE_EXP0
+label WHILE_END0
+push local 0
+pop local 1
+label WHILE_EXP1
+push local 0
+push constant 0
+eq
+not
+not
+if-goto WHILE_END1
+call Keyboard.keyPressed 0
+pop local 0
+goto WHILE_EXP1
+label WHILE_END1
+push local 1
+return
